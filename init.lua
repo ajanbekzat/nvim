@@ -1,0 +1,2 @@
+require("ajan_conf")
+
