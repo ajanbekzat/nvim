@@ -1,0 +1,34 @@
+# lazy.nvim plugin lock file (auto-generated, can be tracked for reproducibility)
+# Uncomment the next line if you prefer not to track it:
+# lazy-lock.json
+
+# Plugin install/build artifacts
+plugin/
+
+# Neovim swap, backup, undo files
+*.swp
+*.swo
+*~
+.netrwhist
+
+# LazyVim generated/cache
+.lazy/
+
+# Neovim shada (shared data)
+shada/
+
+# Session files
+sessions/
+
+# LSP / Mason installed tools
+mason/
+
+# .neoconf (project-local LSP settings, auto-generated)
+.neoconf.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Claude Code local state
+.claude/
