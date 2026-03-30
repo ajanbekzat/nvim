@@ -15,6 +15,7 @@ if os.getenv("SSH_TTY") then
       ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
     },
   }
+  vim.opt.clipboard = "unnamedplus"
 end
 
 -- Detect macOS system appearance and set background accordingly
