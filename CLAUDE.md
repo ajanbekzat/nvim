@@ -32,3 +32,29 @@ Run: `stylua lua/`
 ## Adding Plugins
 
 Create a new file in `lua/plugins/` returning a lazy.nvim plugin spec table. To override a LazyVim default plugin, use the same plugin name and merge opts. See `lua/plugins/example.lua` for patterns (it's guarded by `if true then return {} end` so nothing in it loads).
+
+## Remote Setup (Ubuntu/Linux)
+
+To clone and run this config on a remote machine:
+
+1. Install Neovim 0.10+ (avoid snap — use the AppImage):
+   ```bash
+   curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
+   chmod u+x nvim-linux-x86_64.appimage
+   sudo mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
+   ```
+
+2. Install build dependencies for tree-sitter parsers:
+   ```bash
+   sudo apt install -y build-essential g++ npm
+   sudo npm install -g tree-sitter-cli
+   ```
+   If `tree-sitter-cli` from npm fails with a GLIBC version error, install an older version (`sudo npm install -g tree-sitter-cli@0.24.7`) or build from source via `cargo install tree-sitter-cli`.
+
+3. Clone the config and launch:
+   ```bash
+   git clone <repo-url> ~/.config/nvim
+   rm ~/.config/nvim/lazy-lock.json   # let lazy.nvim resolve fresh versions
+   nvim
+   ```
+   Lazy.nvim will auto-install all plugins on first launch.
