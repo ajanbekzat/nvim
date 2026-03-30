@@ -18,8 +18,13 @@ if os.getenv("SSH_TTY") then
   vim.opt.clipboard = "unnamedplus"
 end
 
--- Detect macOS system appearance and set background accordingly
+-- Detect macOS system appearance, default to dark on non-macOS (e.g. remote Ubuntu)
+local is_mac = vim.fn.has("mac") == 1
+
 local function get_system_appearance()
+  if not is_mac then
+    return "dark"
+  end
   local handle = io.popen("defaults read -g AppleInterfaceStyle 2>/dev/null")
   if handle then
     local result = handle:read("*a")
@@ -31,22 +36,33 @@ local function get_system_appearance()
   return "light"
 end
 
+local function apply_theme(bg)
+  vim.o.background = bg
+  require("solarized-osaka").setup({ transparent = bg == "dark" })
+  vim.cmd.colorscheme("solarized-osaka")
+end
+
 local function sync_theme()
   local bg = get_system_appearance()
   if vim.o.background ~= bg then
-    vim.o.background = bg
-    -- Re-apply transparent only in dark mode
-    require("solarized-osaka").setup({ transparent = bg == "dark" })
-    vim.cmd.colorscheme("solarized-osaka")
+    apply_theme(bg)
   end
+end
+
+local function toggle_theme()
+  local bg = vim.o.background == "dark" and "light" or "dark"
+  apply_theme(bg)
 end
 
 vim.o.background = get_system_appearance()
 
--- Auto-sync theme when Neovim regains focus (e.g. after switching system appearance)
-vim.api.nvim_create_autocmd("FocusGained", {
-  callback = sync_theme,
-})
+-- Auto-sync theme on focus (macOS only)
+if is_mac then
+  vim.api.nvim_create_autocmd("FocusGained", {
+    callback = sync_theme,
+  })
+end
 
--- Manual command to sync theme
+-- Manual commands
 vim.api.nvim_create_user_command("SyncTheme", sync_theme, {})
+vim.api.nvim_create_user_command("ToggleTheme", toggle_theme, {})
